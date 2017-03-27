@@ -11,7 +11,9 @@ var passport = require("passport");
 var flash = require("connect-flash");
 var validator = require("express-validator");
 
+var userRoutes = require('./routes/user');
 var index = require('./routes/index');
+
 
 
 var app = express();
@@ -38,15 +40,23 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(function (req, res, next) {
+    res.locals.login = req.isAuthenticated();
+    next();
+});
+
+app.use('/user', userRoutes);
 app.use('/', index);
 
 
 // catch 404 and forward to error handler
+
 app.use(function(req, res, next) {
   var err = new error('Not Found');
   err.status = 404;
   next(err);
 });
+
 
 // error handler
 app.use(function(err, req, res, next) {
