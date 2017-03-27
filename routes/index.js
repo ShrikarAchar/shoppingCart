@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-
+var cart = require("../models/cart");
 
 var Product = require("../models/product");
 
@@ -16,6 +16,22 @@ Product.find(function (err, docs) {
     res.render('shop/index', { title: 'Shopping Cart', products: productChunks});
 });
   });
+
+
+router.get("/add-to-cart/:id", function (req, res, next) {
+    var productId = req.params.id;
+    var newCart = new cart(req.session.newCart ? req.session.newCart : {});
+
+    Product.findById(productId, function (err, product) {
+        if (err){
+            return res.redirect("/");
+        }
+        cart.add(product, product.id);
+        req.session.newCart = cart;
+        res.redirect("/")
+    });
+});
+
 
 module.exports = router;
 
