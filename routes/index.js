@@ -33,6 +33,22 @@ router.get("/add-to-cart/:id", function (req, res, next) {
     });
 });
 
+router.get("/shopping-cart", function (req, res, next) {
+   if (!req.session.newCart){
+       return res.render("shop/shopping-cart", {products: null});
+   }
+   var newCart = new cart(req.session.newCart);
+   res.render("shop/shopping-cart", {products: newCart.generateArray(), totalPrice: newCart.totalPrice});
+});
+
+router.get("/checkout", function (req, res, next) {
+    if (!req.session.newCart){
+        return res.redirect("/shopping-cart");
+    }
+    var newCart = new cart(req.session.newCart);
+    res.render("shop/checkout", {total: newCart.totalPrice});
+});
+
 module.exports = router;
 
 
