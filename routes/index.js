@@ -26,12 +26,12 @@ router.get("/add-to-cart/:id", function (req, res, next) {
         if (err){
             return res.redirect("/");
         }
-        cart.add(product, product.id);
-        req.session.newCart = cart;
+        newCart.add(product, product.id);
+        req.session.newCart = newCart;
+        console.log(req.session.newCart);
         res.redirect("/")
     });
 });
-
 
 module.exports = router;
 
